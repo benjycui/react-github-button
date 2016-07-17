@@ -9,4 +9,5 @@ export default function ajaxGet(url, callback) {
   };
   xhr.open('GET', url, true);
   xhr.send();
+  return xhr;
 }

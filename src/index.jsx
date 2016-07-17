@@ -33,7 +33,12 @@ export default React.createClass({
     };
   },
   componentDidMount() {
-    ajaxGet(this.getRequestUrl(), this.setCount);
+    this.xhr = ajaxGet(this.getRequestUrl(), this.setCount);
+  },
+  componentWillUnmount() {
+    if (this.xhr) {
+      this.xhr.abort();
+    }
   },
   setCount(data) {
     const count = data[`${this.props.type}_count`];
