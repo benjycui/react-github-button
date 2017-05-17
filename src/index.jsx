@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ajaxGet from './ajaxGet';
 import * as utils from './utils';
 
@@ -12,9 +13,9 @@ const typeToPath = {
   forks: 'network',
 };
 
-export default React.createClass({
-  displayName: 'GitHubButton',
-  propTypes: {
+export default class GitHubButton extends React.Component {
+  static displayName = 'GitHubButton';
+  static propTypes = {
     className: PropTypes.string,
     type: PropTypes.oneOf([
       'stargazers',
@@ -26,37 +27,35 @@ export default React.createClass({
     size: PropTypes.oneOf([
       'large',
     ]),
-  },
-  getInitialState() {
-    return {
-      count: null,
-    };
-  },
+  };
+  state = {
+    count: null,
+  };
   componentDidMount() {
     this.xhr = ajaxGet(this.getRequestUrl(), this.setCount);
-  },
+  }
   componentWillUnmount() {
     if (this.xhr) {
       this.xhr.abort();
     }
-  },
-  setCount(data) {
+  }
+  setCount = (data) => {
     if (!data) return;
     const count = data[`${this.props.type}_count`];
     this.setState({ count });
-  },
+  }
   getRequestUrl() {
     const { namespace, repo } = this.props;
     return `//api.github.com/repos/${namespace}/${repo}`;
-  },
+  }
   getRepoUrl() {
     const { namespace, repo } = this.props;
     return `//github.com/${namespace}/${repo}/`;
-  },
+  }
   getCountUrl() {
     const { namespace, repo, type } = this.props;
     return `//github.com/${namespace}/${repo}/${typeToPath[type] || type}/`;
-  },
+  }
   getCountStyle() {
     const count = this.state.count;
     if (count !== null) {
@@ -65,7 +64,7 @@ export default React.createClass({
       };
     }
     return null;
-  },
+  }
   render() {
     const { className, type, size, ...rest } = this.props;
     delete rest.namespace;
@@ -93,5 +92,5 @@ export default React.createClass({
         </a>
       </span>
     );
-  },
-});
+  }
+}
