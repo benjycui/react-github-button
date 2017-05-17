@@ -32,14 +32,16 @@ export default class GitHubButton extends React.Component {
     count: null,
   };
   componentDidMount() {
-    this.xhr = ajaxGet(this.getRequestUrl(), this.setCount);
+    this.xhr = ajaxGet(this.getRequestUrl(), (response) => {
+      this.setCount(response);
+    });
   }
   componentWillUnmount() {
     if (this.xhr) {
       this.xhr.abort();
     }
   }
-  setCount = (data) => {
+  setCount(data) {
     if (!data) return;
     const count = data[`${this.props.type}_count`];
     this.setState({ count });
