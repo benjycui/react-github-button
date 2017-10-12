@@ -46,6 +46,6 @@ Your GitHub id or organization name.
 
 The name of your repository.
 
-## Liscense
+## License
 
 MIT
