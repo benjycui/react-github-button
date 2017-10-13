@@ -11,7 +11,8 @@
     "start": "rc-tools run server",
     "pub": "rc-tools run pub",
     "lint": "rc-tools run lint",
-    "test": "rc-tools run compile && mocha"
+    "test": "rc-tools run compile && mocha",
+    "install": "rc-tools run compile"
   },
   "config": {
     "port": 8000

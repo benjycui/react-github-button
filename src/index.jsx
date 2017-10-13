@@ -7,6 +7,7 @@ const typeToLabel = {
   stargazers: 'Star',
   watchers: 'Watch',
   forks: 'Fork',
+  follow: 'Follow'
 };
 
 const typeToPath = {
@@ -21,9 +22,10 @@ export default class GitHubButton extends React.Component {
       'stargazers',
       'watchers',
       'forks',
+      'follow'
     ]).isRequired,
     namespace: PropTypes.string.isRequired,
-    repo: PropTypes.string.isRequired,
+    repo: PropTypes.string,
     size: PropTypes.oneOf([
       'large',
     ]),
@@ -48,11 +50,13 @@ export default class GitHubButton extends React.Component {
   }
   getRequestUrl() {
     const { namespace, repo } = this.props;
-    return `//api.github.com/repos/${namespace}/${repo}`;
+    console.log(repo);
+    return `//github.com/${namespace}/${(repo) ? `${repo}/` : ''}`;
   }
   getRepoUrl() {
     const { namespace, repo } = this.props;
-    return `//github.com/${namespace}/${repo}/`;
+    console.log(repo);
+    return `//github.com/${namespace}/${(repo) ? `${repo}/` : ''}`;
   }
   getCountUrl() {
     const { namespace, repo, type } = this.props;
@@ -67,8 +71,17 @@ export default class GitHubButton extends React.Component {
     }
     return null;
   }
+  getText(type) {
+    switch(type) {
+      case 'follow':
+      return `Follow @${this.props.namespace}`;
+
+      default:
+      return typeToLabel[type];
+    }
+  }
   render() {
-    const { className, type, size, ...rest } = this.props;
+    const { className, type, size, ariaLabel, repo, ...rest } = this.props;
     delete rest.namespace;
     delete rest.repo;
 
@@ -80,18 +93,22 @@ export default class GitHubButton extends React.Component {
       [className]: className,
     });
 
+    const ghCount = (repo) ? (
+      <a className="gh-count" target="_blank"
+        href={this.getCountUrl()}
+        style={this.getCountStyle()}
+      >
+        { count }
+      </a>
+    ) : undefined;
+
     return (
       <span {...rest} className={buttonClassName}>
-        <a className="gh-btn" href={this.getRepoUrl()} target="_blank">
+        <a aria-label={ariaLabel} className="gh-btn" href={this.getRepoUrl()} target="_blank">
           <span className="gh-ico" aria-hidden="true"></span>
-          <span className="gh-text">{ typeToLabel[type] }</span>
+          <span className="gh-text">{ this.getText(type) }</span>
         </a>
-        <a className="gh-count" target="_blank"
-          href={this.getCountUrl()}
-          style={this.getCountStyle()}
-        >
-          { count }
-        </a>
+        {ghCount}
       </span>
     );
   }
